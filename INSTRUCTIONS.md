@@ -1,5 +1,9 @@
 # Assignment 2: Linked List Implementation
 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+NO TAIL POINTERRRRR
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 For this assignment you will develop your own implementation of a singly linked list (SLL). Your SLL should implement the same index-based `ListADT` you built in A0, even though those operations will be slower on a linked list. You will then add linked-list-native operations (like inserting after a node) and a copy constructor.
 
 There are a lot of files in this assignment, so take a moment and let's walk through them. The hope is that breaking things into pieces (hence the many files) will help you to start with the basic properties of an SLL and expand outwards until you have built a fully operational implementation of this data structure.
