@@ -1,5 +1,7 @@
 /**
  * Class to implement a singly linked list
+ * Singly linked list is a collection of nodes, with each
+ * node pointing to the next node and holding a piece of data.
  *
  * @author Abigail Lei
  * @version Spring 2026
@@ -10,12 +12,20 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     private NodeSL<T> head;
     private int size;
 
-    // Constructors
+    /**
+     * Constructor that creates an empty linked list
+     * Sets size to 0 and head to null
+     */
     SLL() {
         this.head = null;
         this.size = 0;
     }
 
+    /**
+     * Constructor that takes in a head.
+     * Sets size to one.
+     * @param head the Node that is the linked list's head
+     */
     SLL(NodeSL<T> head) {
         this.head = head;
         this.size = 1;
@@ -23,7 +33,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
 
     /**
      * Copy constructor for the singly linked list
-     * @param original the original 
+     * @param original the original linked list that will be copied
      */
     SLL(SLL<T> original) {
         if (original == null || original.size() == 0) {
@@ -306,8 +316,6 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
             here.setNext(node);
             this.size += 1;
         }
-
-
     }
 
     /** 
@@ -335,5 +343,4 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
         this.size -= 1;
         return target.getData();
     }
-
 }
