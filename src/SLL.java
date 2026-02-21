@@ -23,45 +23,44 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
 
     /**
      * Copy constructor for the singly linked list
-     * @param original
+     * @param original the original 
      */
     SLL(SLL<T> original) {
         if (original == null || original.size() == 0) {
             this.head = null;
             this.size = 0;
             return;
+        } else{
+            NodeSL<T> originalNode = original.getHead();
+
+            this.head = new NodeSL<T>(originalNode.getData(), null);
+            NodeSL<T> current = this.head;
+            originalNode = originalNode.getNext();
+
+
+            while (originalNode != null) {
+                NodeSL<T> next = new NodeSL<T>(originalNode.getData(), null);
+                current.setNext(next);
+                current= next;
+                originalNode = originalNode.getNext();
+            }
+
+            this.size = original.size();
         }
-
-        NodeSL<T> origNode = original.getHead();
-        // create new head
-        this.head = new NodeSL<T>(origNode.getData(), null);
-        NodeSL<T> cur = this.head;
-        origNode = origNode.getNext();
-
-        // copy remaining nodes
-        while (origNode != null) {
-            NodeSL<T> next = new NodeSL<T>(origNode.getData(), null);
-            cur.setNext(next);
-            cur = next;
-            origNode = origNode.getNext();
-        }
-
-        this.size = original.size();
     }
 
     /**
      * An accessor that returns the number of elements in the list
      * @return integer of how many elements are in the list
-     * @throws NullPointerException if called on a list that has not been created yet.
      */
     public int size() {
         return this.size;
     }
 
     /**
-     * Checks the list and returns whether it is empty or not
+     * Checks the linked list and returns whether it is empty or not
      * True means the list empty and has size of 0
-     * False means having at least one element
+     * False means having at least one node
      * @return a boolean of if the list is empty or not
      */
     public boolean isEmpty() {
@@ -74,7 +73,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     /**
      * Accesses an element at a specific index, then returns it
      * @param index of element to access
-     * @return T - the element at the index
+     * @return T the data at given node
      * @throws IndexOutOfBoundsException if index is invalid, less than 0 or is greater than the size
      */
     public T get(int index) {
@@ -87,8 +86,8 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     /**
      * Helper method that returns a node at a specific index
      * @param index of element to access
-     * @return N
-     * @throws IndexOutOfBoundsException invalid index
+     * @return node at given index
+     * @throws IndexOutOfBoundsException for invalid indicies
      */
     public NodeSL<T> getNode(int index) {
         if (index < 0 || index >= this.size){
@@ -105,12 +104,12 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     }
 
     /**
-     * Replaces the element of a specific index with a new element, T item
+     * Replaces the node of a specific index with a new element, T item
      * @param index an integer for the index of the position to change
-     * @param value the new element of T type to replace the previous element with.
+     * @param value the new node with data of T type to replace the previous node with.
      * @throws IndexOutOfBoundsException if index is invalid, less than 0 or is greater than size
-     * @throws IllegalStateException` if list is empty
-     * @return the previous element that got replaced
+     * @throws IllegalStateException if list is empty
+     * @return the previous node data that got replaced
      */
     public T set(int index, T value) {
         T returned;
@@ -259,8 +258,13 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
             throw new IllegalStateException("Cannot remove on empty list");
         } else {
             T removed = this.head.getData();
-            this.head = getNode(1);
-            this.size -= 1;
+            if (size == 1){
+                this.head = null;
+                this.size = 0;
+            } else {
+                this.head = getNode(1);
+                this.size -= 1;
+            }
 
             return removed;
         }
@@ -268,19 +272,24 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
 
     /** 
      *  Removes the given item from the tail of the list
-     *  @return item removed
+     *  @return value T item removed
      *  @throws IllegalStateException if used on empty list
      */
     public T removeLast(){
+
         if (size == 0){
             throw new IllegalStateException("Cannot remove on empty list");
-        } else {
-            T removed = getNode(size-1).getData();
+        } 
+        T removed = getNode(size-1).getData();
 
+        if (size == 1){
+            this.head = null;
+            this.size = 0;
+        } else {
             getNode(size-2).setNext(null);
             this.size -= 1;
-            return removed;
         }
+        return removed;
     }
 
     /** 
@@ -292,12 +301,13 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     public void addAfter(NodeSL<T> here, T v){
         if (here == null) {
             addFirst(v);
-            return;
+        } else {
+            NodeSL<T> node = new NodeSL<T>(v, here.getNext());
+            here.setNext(node);
+            this.size += 1;
         }
 
-        NodeSL<T> node = new NodeSL<T>(v, here.getNext());
-        here.setNext(node);
-        this.size += 1;
+
     }
 
     /** 
