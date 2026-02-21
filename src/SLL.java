@@ -40,7 +40,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
             this.head = null;
             this.size = 0;
             return;
-        } else{
+        } else {
             NodeSL<T> originalNode = original.getHead();
 
             this.head = new NodeSL<T>(originalNode.getData(), null);
@@ -128,7 +128,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
             throw new IndexOutOfBoundsException("Invalid index");
         } else if (size < 0) {
             throw new IllegalStateException("Operation invalid in current state");
-        } else{
+        } else {
              NodeSL<T> node = getNode(index);
             returned = node.getData();
             node.setData(value);

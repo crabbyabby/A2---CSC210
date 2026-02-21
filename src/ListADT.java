@@ -1,3 +1,6 @@
+/**
+ * Interface for the list abstract data type
+ */
 public interface ListADT<T>{
         /**
      * An accessor that returns the number of elements in the list
@@ -58,5 +61,11 @@ public interface ListADT<T>{
      */
     public String toString();
 
+    /**
+     * Helper method that returns a node at a specific index
+     * @param index of element to access
+     * @return node at given index
+     * @throws IndexOutOfBoundsException for invalid indicies
+     */
     public NodeSL<T> getNode(int index);
 }
