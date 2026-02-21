@@ -10,6 +10,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     private NodeSL<T> head;
     private int size;
 
+    // Constructors
     SLL() {
         this.head = null;
         this.size = 0;
@@ -18,6 +19,34 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     SLL(NodeSL<T> head) {
         this.head = head;
         this.size = 1;
+    }
+
+    /**
+     * Copy constructor for the singly linked list
+     * @param original
+     */
+    SLL(SLL<T> original) {
+        if (original == null || original.size() == 0) {
+            this.head = null;
+            this.size = 0;
+            return;
+        }
+
+        NodeSL<T> origNode = original.getHead();
+        // create new head
+        this.head = new NodeSL<T>(origNode.getData(), null);
+        NodeSL<T> cur = this.head;
+        origNode = origNode.getNext();
+
+        // copy remaining nodes
+        while (origNode != null) {
+            NodeSL<T> next = new NodeSL<T>(origNode.getData(), null);
+            cur.setNext(next);
+            cur = next;
+            origNode = origNode.getNext();
+        }
+
+        this.size = original.size();
     }
 
     /**
@@ -49,7 +78,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      * @throws IndexOutOfBoundsException if index is invalid, less than 0 or is greater than the size
      */
     public T get(int index) {
-        if (index < 0 || index > this.size){
+        if (index < 0 || index >= this.size){
             throw new IndexOutOfBoundsException("Invalid index");
         } 
        return getNode(index).getData();
@@ -62,7 +91,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      * @throws IndexOutOfBoundsException invalid index
      */
     public NodeSL<T> getNode(int index) {
-        if (index < 0 || index > this.size){
+        if (index < 0 || index >= this.size){
             throw new IndexOutOfBoundsException("Invalid index");
         } 
 
@@ -86,7 +115,7 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
     public T set(int index, T value) {
         T returned;
 
-        if (index < 0 || index > this.size){
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException("Invalid index");
         } else if (size < 0) {
             throw new IllegalStateException("Operation invalid in current state");
@@ -108,16 +137,19 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      * @param value is the element being added, can be many different types
      * @throws IndexOutOfBoundsException if index is invalid as in less than 0 or is greater than size
     */
-    public void add(int index, T value){
-        
-    }
+    public void add(int index, T value) {
+        if (index < 0 || index > this.size){
+            throw new IndexOutOfBoundsException("Invalid index");
+        } 
 
-    /**
-     * Appends the new element to the end of the list since there is no index
-     * @param value the item being added to the list, can be any type
-     */
-    public void add(T value){
-
+        if (index == 0){
+            addFirst(value);
+        } else {
+            NodeSL<T> before = getNode(index - 1);
+            NodeSL<T> current = new NodeSL<T>(value, before.getNext());
+            before.setNext(current);
+            this.size += 1;
+        }
     }
 
     /**
@@ -126,10 +158,28 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      * @param index the index of the item to be removed
      * @return the item that was removed from the list
      * @throws IndexOutOfBoundsException if index is invalid: less than 0 or is greater than size
-     * @throws IndexOutOfBoundsException if list is empty
+     * @throws IllegalStateException if list is empty
      */
-    public T remove(int index){
+    public T remove(int index) {
+        if (index < 0 || index >= this.size){
+            throw new IndexOutOfBoundsException("Invalid index");
+        } else if (size < 0) {
+            throw new IllegalStateException("Operation invalid in current state");
+        } else {
+            NodeSL<T> returned = getNode(index);
 
+            if (index == size-1){
+                NodeSL<T> node = getNode(index-1);
+                node.setNext(null);
+            } else {
+                NodeSL<T> before = getNode(index-1);
+                NodeSL<T> after = getNode(index + 1);
+                before.setNext(after);
+            }
+
+            this.size -= 1;
+            return returned.getData();
+        }
     }
     
 
@@ -137,12 +187,11 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      * toString printing method that formats the dynamic array nicely
      * @return String of dyanmic array in format with brackets and commas
      */
-    public String toString(){
+    public String toString() {
         String returned = "[";
         if (this.size == 0){
             return "[]";
         }
-
         
         for (int i = 0; i < this.size; i++){
             returned += this.getNode(i).getData();
@@ -152,37 +201,87 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
         return returned.substring(0, returned.length()-2) + "]";
     }
 
-    public NodeSL<T> getHead();
+    /** 
+     *  Accessor for head node
+     *  @return the head node
+     */
+    public NodeSL<T> getHead() {
+        return this.head;
+    }
   
     /** 
      *  Accessor for tail node
      *  @return the tail node
      */
-    public NodeSL<T> getTail();
+    public NodeSL<T> getTail() {
+        if (size == 0){
+            return null;
+        } else {
+            return getNode(size-1);
+        }
+    }
 
     /** 
      *  Inserts the given item at the head of the list
      *  @param v item to insert 
      */
-    public void addFirst(T v);
+    public void addFirst(T v) {
+        NodeSL<T> current = new NodeSL<T>(v, this.head);
+        this.head = current;
+        this.size +=1;
+    }
 
     /** 
      *  Inserts the given item at the tail of the list
      *  @param v item to insert 
      */
-    public void addLast(T v);
+    public void addLast(T v) {
+
+        if (size == 0){
+            NodeSL<T> current = new NodeSL<T>(v, null);
+            this.head = current;
+            this.size += 1;
+        } else {
+            NodeSL<T> current = getNode(size - 1);
+            NodeSL<T> next = new NodeSL<T>(v, null);
+            current.setNext(next);
+            this.size+=1;
+        }
+    }
 
     /** 
      *  Removes the given item from the head of the list
      *  @return v item removed
+     *  @throws IllegalStateException if used on empty list
      */
-    public T removeFirst();
+    public T removeFirst() {
+        if (size == 0){
+            throw new IllegalStateException("Cannot remove on empty list");
+        } else {
+            T removed = this.head.getData();
+            this.head = getNode(1);
+            this.size -= 1;
+
+            return removed;
+        }
+    }
 
     /** 
      *  Removes the given item from the tail of the list
      *  @return item removed
+     *  @throws IllegalStateException if used on empty list
      */
-    public T removeLast();
+    public T removeLast(){
+        if (size == 0){
+            throw new IllegalStateException("Cannot remove on empty list");
+        } else {
+            T removed = getNode(size-1).getData();
+
+            getNode(size-2).setNext(null);
+            this.size -= 1;
+            return removed;
+        }
+    }
 
     /** 
      *  Inserts the given item after the specified node.
@@ -190,7 +289,16 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      *  @param here node to insert after
      *  @param v item to insert 
      */
-    public void addAfter(NodeSL<T> here, T v);
+    public void addAfter(NodeSL<T> here, T v){
+        if (here == null) {
+            addFirst(v);
+            return;
+        }
+
+        NodeSL<T> node = new NodeSL<T>(v, here.getNext());
+        here.setNext(node);
+        this.size += 1;
+    }
 
     /** 
      *  Removes the node after the given position.
@@ -198,6 +306,24 @@ public class SLL<T> implements ListADT<T>, NodeBasedOps<T>{
      *  @param here marks position to remove after
      *  @return item removed
      */
-    public T removeAfter(NodeSL<T> here);
+    public T removeAfter(NodeSL<T> here){
+        if (size == 0){
+            throw new IllegalStateException("Cannot remove on empty list");
+        } else if (here == null) {
+            T removed = this.head.getData();
+            this.head = this.head.getNext();
+            this.size -= 1;
+            return removed;
+        }
+
+        NodeSL<T> target = here.getNext();
+        if (target == null) {
+            throw new IllegalStateException("No node exists after the given node");
+        }
+
+        here.setNext(target.getNext());
+        this.size -= 1;
+        return target.getData();
+    }
 
 }

@@ -43,12 +43,6 @@ public interface ListADT<T>{
     public void add(int index, T value);
 
     /**
-     * Appends the new element to the end of the list since there is no index
-     * @param value the item being added to the list, can be any type
-     */
-    public void add(T value);
-
-    /**
      * Removes the item at the specific index
      * Pushes forward each element behind the element that was removed
      * @param index the index of the item to be removed
